@@ -62,4 +62,14 @@ public class HelpRequestController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/user/{requesterId}")
+    public ResponseEntity<List<HelpRequest>> getRequestsByUser(@PathVariable Long requesterId) {
+        return ResponseEntity.ok(requestService.getRequestsByRequester(requesterId));
+    }
+
+    @GetMapping("/volunteer/{volunteerId}")
+    public ResponseEntity<List<HelpRequest>> getRequestsByVolunteer(@PathVariable Long volunteerId) {
+        return ResponseEntity.ok(requestService.getRequestsByVolunteer(volunteerId));
+    }
 }

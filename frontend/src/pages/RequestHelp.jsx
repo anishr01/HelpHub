@@ -9,6 +9,9 @@ const RequestHelp = () => {
     type: 'FOOD_CLOTHES',
     title: '',
     location: '',
+    latitude: null,
+    longitude: null,
+    imageUrl: null,
     description: ''
   });
   const [loading, setLoading] = useState(false);
@@ -23,6 +26,7 @@ const RequestHelp = () => {
     setLocationLoading(true);
     navigator.geolocation.getCurrentPosition(async (position) => {
       const { latitude, longitude } = position.coords;
+      setFormData(prev => ({ ...prev, latitude, longitude }));
       try {
         const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
         const data = await res.json();
@@ -37,9 +41,38 @@ const RequestHelp = () => {
         setLocationLoading(false);
       }
     }, () => {
-      alert('Unable to retrieve your location. Please ensure location permissions are granted.');
+      // Fallback to India for hackathon testing if browser blocks GPS
+      const lat = 28.6139;
+      const lng = 77.2090;
+      setFormData(prev => ({ ...prev, latitude: lat, longitude: lng, location: "New Delhi, Delhi, India" }));
       setLocationLoading(false);
     });
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const data = new FormData();
+    data.append('file', file);
+
+    try {
+      setLoading(true);
+      const res = await fetch('http://localhost:8081/api/upload', {
+        method: 'POST',
+        body: data
+      });
+      const result = await res.json();
+      if (res.ok) {
+        setFormData(prev => ({ ...prev, imageUrl: result.imageUrl }));
+      } else {
+        alert(result.error || 'Failed to upload image');
+      }
+    } catch (err) {
+      alert('Error uploading image');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -56,6 +89,9 @@ const RequestHelp = () => {
       if (resp.ok) {
         alert('Emergency request submitted successfully!');
         navigate('/requests');
+      } else {
+        const errMsg = await resp.text();
+        alert('Action Failed: ' + errMsg);
       }
     } catch (err) {
       alert('Error submitting request');
@@ -142,8 +178,23 @@ const RequestHelp = () => {
             ></textarea>
           </div>
 
+          <div>
+            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>Emergency Photo (Optional)</label>
+            <input 
+              type="file" 
+              accept="image/*"
+              onChange={handleImageUpload}
+              style={{ padding: '10px' }}
+            />
+            {formData.imageUrl && (
+              <div style={{ marginTop: '12px', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden', height: '160px' }}>
+                <img src={formData.imageUrl} alt="Uploaded preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+            )}
+          </div>
+
           <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '16px', padding: '16px' }}>
-            {loading ? 'Submitting...' : 'Submit Request'}
+            {loading ? 'Processing...' : 'Submit Request'}
           </button>
         </form>
       </div>

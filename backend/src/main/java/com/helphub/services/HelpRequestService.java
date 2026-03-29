@@ -23,6 +23,14 @@ public class HelpRequestService {
         return requestRepository.findByType(type);
     }
 
+    public List<HelpRequest> getRequestsByRequester(Long requesterId) {
+        return requestRepository.findByRequesterId(requesterId);
+    }
+
+    public List<HelpRequest> getRequestsByVolunteer(Long volunteerId) {
+        return requestRepository.findByAcceptedById(volunteerId);
+    }
+
     public Optional<HelpRequest> getRequestById(Long id) {
         return requestRepository.findById(id);
     }

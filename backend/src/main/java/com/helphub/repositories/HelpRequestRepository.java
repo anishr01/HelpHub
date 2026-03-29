@@ -11,5 +11,6 @@ public interface HelpRequestRepository extends JpaRepository<HelpRequest, Long> 
     List<HelpRequest> findByType(String type);
     List<HelpRequest> findByStatus(String status);
     List<HelpRequest> findByRequesterId(Long requesterId);
+    List<HelpRequest> findByAcceptedById(Long acceptedById);
     List<HelpRequest> findAllByOrderByCreatedAtDesc();
 }

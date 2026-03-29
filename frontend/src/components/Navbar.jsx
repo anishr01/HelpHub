@@ -20,8 +20,9 @@ const Navbar = () => {
         
         {currentUser ? (
           <>
-            <span style={{ color: 'var(--text-muted)' }}>Hey, {currentUser.name}</span>
-            <button className="btn-secondary" onClick={handleLogout} style={{ padding: '8px 16px', fontSize: '0.9rem' }}>Logout</button>
+            <Link to="/profile" className="nav-link-text" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>
+              👤 {currentUser.name}
+            </Link>
             <Link to="/request-help">
               <button className="btn-primary" style={{ padding: '8px 16px', fontSize: '0.9rem' }}>Get Help</button>
             </Link>

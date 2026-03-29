@@ -28,6 +28,8 @@ public class HelpRequest {
     private String status;
 
     private String location;
+    private Double latitude;
+    private Double longitude;
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.EAGER)

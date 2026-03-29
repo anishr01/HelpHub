@@ -6,6 +6,7 @@ import RequestHelp from './pages/RequestHelp'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import Profile from './pages/Profile'
 import './index.css'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/request-help" element={<RequestHelp />} />
             <Route path="/requests" element={<Dashboard />} />
           </Routes>

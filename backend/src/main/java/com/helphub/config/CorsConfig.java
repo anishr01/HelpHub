@@ -19,6 +19,16 @@ public class CorsConfig {
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
+
+            @Override
+            public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
+                java.nio.file.Path uploadDir = java.nio.file.Paths.get("uploads");
+                String uploadPath = uploadDir.toFile().getAbsolutePath();
+                if (uploadDir.toFile().exists() || uploadDir.toFile().mkdirs()) {
+                    registry.addResourceHandler("/uploads/**")
+                            .addResourceLocations("file:/" + uploadPath + "/");
+                }
+            }
         };
     }
 }
